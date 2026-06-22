@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>管衡 HR | 管理行为治理平台</title>
+    <meta
+      name="description"
+      content="面向企业人力资源管理的管理行为治理平台原型：组织健康看板、风险事件处置、管理者档案、纠偏计划、RBAC 与数据治理。"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <aside class="sidebar" aria-label="主导航">
+        <a class="brand" href="#overview" aria-label="管衡 HR 首页">
+          <span class="brand-mark">管</span>
+          <span>
+            <strong>管衡 HR</strong>
+            <small>Management Governance</small>
+          </span>
+        </a>
+
+        <nav class="side-nav">
+          <a href="#overview" class="active">
+            <span>01</span>
+            组织总览
+          </a>
+          <a href="#events">
+            <span>02</span>
+            风险事件
+          </a>
+          <a href="#managers">
+            <span>03</span>
+            管理者档案
+          </a>
+          <a href="#plans">
+            <span>04</span>
+            纠偏计划
+          </a>
+          <a href="#governance">
+            <span>05</span>
+            数据治理
+          </a>
+          <a href="#settings">
+            <span>06</span>
+            系统配置
+          </a>
+        </nav>
+
+        <div class="deploy-card">
+          <span class="deploy-kicker">当前阶段</span>
+          <strong>预警纠偏期</strong>
+          <p>评分未进入绩效，仅 HRBP 与管理者本人可见。</p>
+        </div>
+      </aside>
+
+      <div class="workspace">
+        <header class="topbar">
+          <button class="menu-button" type="button" aria-label="打开导航" aria-expanded="false">
+            <span></span>
+            <span></span>
+          </button>
+          <div class="topbar-title">
+            <strong>企业人力资源管理产品原型</strong>
+            <span>把中层管理行为纳入可审计、可纠偏、可复盘的 HR 过程管理</span>
+          </div>
+          <div class="topbar-actions">
+            <label class="search-box">
+              <span>搜索</span>
+              <input id="globalSearch" type="search" placeholder="管理者 / 部门 / 事件编号" />
+            </label>
+            <button class="button secondary" id="exportBtn" type="button">导出月报</button>
+            <div class="user-chip">
+              <span>HRBP</span>
+              柳青
+            </div>
+          </div>
+        </header>
+
+        <main>
+          <section class="hero-panel" id="overview" data-animate>
+            <div class="hero-copy">
+              <p class="eyebrow">HR Management Product</p>
+              <h1>管理行为治理工作台</h1>
+              <p>
+                面向 HRBP、HRD 与 CEO 的企业级后台。系统不评价员工个人表现，只治理管理者在公开工作场景中的
+                任务交办、沟通方式、需求变更、过程指导和纠偏结果。
+              </p>
+              <div class="hero-actions">
+                <a class="button primary" href="#events">处理今日风险</a>
+                <a class="button ghost" href="#governance">查看合规边界</a>
+              </div>
+            </div>
+
+            <div class="implementation-card" aria-label="产品落地原则">
+              <span class="card-label">落地边界</span>
+              <ul>
+                <li>只采集公开工作群、OA 任务、项目系统、公开会议纪要。</li>
+                <li>员工无账号、无评分、无画像；导出报表自动脱敏。</li>
+                <li>算法结论必须进入 HR 复核，不能直接作为处分依据。</li>
+                <li>先诊断后纠偏，最后才可低权重纳入管理者绩效。</li>
+              </ul>
+            </div>
+          </section>
+
+          <section class="control-strip" aria-label="筛选条件" data-animate>
+            <label>
+              组织范围
+              <select id="departmentFilter">
+                <option value="all">全部部门</option>
+                <option value="运营部">运营部</option>
+                <option value="销售部">销售部</option>
+                <option value="研发部">研发部</option>
+                <option value="客服部">客服部</option>
+              </select>
+            </label>
+            <label>
+              统计周期
+              <select id="periodFilter">
+                <option>2026 年 6 月</option>
+                <option>2026 年 5 月</option>
+                <option>近 7 天</option>
+                <option>近 90 天</option>
+              </select>
+            </label>
+            <label>
+              风险级别
+              <select id="riskFilter">
+                <option value="all">全部风险</option>
+                <option value="high">高风险</option>
+                <option value="medium">中风险</option>
+                <option value="low">低风险</option>
+              </select>
+            </label>
+            <button class="button primary" id="applyFilterBtn" type="button">应用筛选</button>
+          </section>
+
+          <section class="metric-grid" aria-label="组织健康指标" data-animate>
+            <article class="metric-card alert">
+              <span>管理风险指数</span>
+              <strong id="orgRisk">67</strong>
+              <p>高于企业阈值 60，需 HRBP 介入</p>
+            </article>
+            <article class="metric-card">
+              <span>指令合格率</span>
+              <strong id="qualifiedRate">54%</strong>
+              <p>目标、标准、时间、资源四要素完整</p>
+            </article>
+            <article class="metric-card">
+              <span>待复核事件</span>
+              <strong id="pendingEvents">18</strong>
+              <p>其中高风险 5 条，中风险 9 条</p>
+            </article>
+            <article class="metric-card">
+              <span>纠偏完成率</span>
+              <strong id="planRate">41%</strong>
+              <p>已进入 30 天行为训练闭环</p>
+            </article>
+            <article class="metric-card">
+              <span>返工成本估算</span>
+              <strong id="reworkCost">¥32.4万</strong>
+              <p>高变更任务 × 人天成本 × 返工系数</p>
+            </article>
+            <article class="metric-card">
+              <span>潜在离职风险</span>
+              <strong id="turnoverRisk">7 组</strong>
+              <p>与压力指数和近期离职数据相关</p>
+            </article>
+          </section>
+
+          <section class="process-card" data-animate>
+            <div>
+              <p class="eyebrow">Closed Loop</p>
+              <h2>企业可执行的管理行为闭环</h2>
+            </div>
+            <ol class="process-flow">
+              <li>
+                <span>1</span>
+                <strong>采集</strong>
+                <small>公开工作数据</small>
+              </li>
+              <li>
+                <span>2</span>
+                <strong>清洗</strong>
+                <small>员工信息脱敏</small>
+              </li>
+              <li>
+                <span>3</span>
+                <strong>识别</strong>
+                <small>指令与沟通风险</small>
+              </li>
+              <li>
+                <span>4</span>
+                <strong>复核</strong>
+                <small>HRBP 人工确认</small>
+              </li>
+              <li>
+                <span>5</span>
+                <strong>纠偏</strong>
+                <small>模板与训练计划</small>
+              </li>
+              <li>
+                <span>6</span>
+                <strong>复盘</strong>
+                <small>月报与成长曲线</small>
+              </li>
+            </ol>
+          </section>
+
+          <section class="grid-2 overview-grid" data-animate>
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <span class="card-label">Department Risk Matrix</span>
+                  <h2>部门风险矩阵</h2>
+                </div>
+                <span class="status-pill warning">需要关注</span>
+              </div>
+              <div class="risk-table-wrap">
+                <table class="risk-table">
+                  <thead>
+                    <tr>
+                      <th>部门</th>
+                      <th>风险指数</th>
+                      <th>指令合格率</th>
+                      <th>负面沟通</th>
+                      <th>建议动作</th>
+                    </tr>
+                  </thead>
+                  <tbody id="departmentTable"></tbody>
+                </table>
+              </div>
+            </article>
+
+            <article class="panel">
+              <div class="panel-header">
+                <div>
+                  <span class="card-label">Trend</span>
+                  <h2>近 6 周组织趋势</h2>
+                </div>
+                <span class="status-pill good">可追踪</span>
+              </div>
+              <div class="trend-chart" aria-label="组织趋势图">
+                <div class="trend-line risk-line"></div>
+                <div class="trend-line quality-line"></div>
+                <div class="trend-grid"></div>
+                <div class="trend-legend">
+                  <span><i class="risk-dot"></i> 风险指数</span>
+                  <span><i class="quality-dot"></i> 指令合格率</span>
+                </div>
+              </div>
+              <p class="panel-note">
+                风险指数下降不代表系统“压低管理者”，而是帮助 HR 看到哪些管理动作被改善、哪些仍需跟进。
+              </p>
+            </article>
+          </section>
+
+          <section class="section-block" id="events">
+            <div class="section-heading" data-animate>
+              <p class="eyebrow">Risk Event Desk</p>
+              <h2>风险事件处置台</h2>
+              <p>每条算法命中都需要 HRBP 复核，展示证据片段、判定依据、影响范围和推荐处置动作。</p>
+            </div>
+
+            <div class="event-workbench" data-animate>
+              <div class="event-list-panel">
+                <div class="list-toolbar">
+                  <strong>待处理事件</strong>
+                  <span id="eventCount">0 条</span>
+                </div>
+                <div class="event-list" id="eventList"></div>
+              </div>
+
+              <article class="event-detail-panel" id="eventDetail" aria-live="polite">
+                <div class="empty-state">
+                  <strong>选择左侧事件查看详情</strong>
+                  <p>包含证据、模型命中、隐私处理、建议动作与复核入口。</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-block" id="managers">
+            <div class="section-heading" data-animate>
+              <p class="eyebrow">Manager Profile</p>
+              <h2>管理者行为档案</h2>
+              <p>不是贴标签，而是帮助 HRBP 形成可沟通的事实材料：问题类型、改善趋势、训练建议和复核记录。</p>
+            </div>
+
+            <div class="manager-layout" data-animate>
+              <aside class="manager-list" id="managerList" aria-label="管理者列表"></aside>
+              <article class="manager-profile" id="managerProfile" aria-live="polite"></article>
+            </div>
+          </section>
+
+          <section class="section-block" id="plans">
+            <div class="section-heading" data-animate>
+              <p class="eyebrow">Correction Plan</p>
+              <h2>30 天纠偏计划</h2>
+              <p>企业真正落地时，系统不能只“报警”，还要把问题转成 HRBP、直属上级和管理者本人都能执行的计划。</p>
+            </div>
+
+            <div class="plan-grid" data-animate>
+              <article class="plan-builder">
+                <span class="card-label">Plan Builder</span>
+                <h3>生成管理者纠偏方案</h3>
+                <label>
+                  纠偏对象
+                  <select id="planManagerSelect"></select>
+                </label>
+                <label>
+                  主要问题
+                  <select id="planIssueSelect">
+                    <option>模糊指令率过高</option>
+                    <option>打压否定沟通</option>
+                    <option>需求频繁变更</option>
+                    <option>缺少过程指导</option>
+                  </select>
+                </label>
+                <button class="button primary" id="buildPlanBtn" type="button">生成 30 天计划</button>
+                <div class="plan-output" id="planOutput">
+                  <strong>计划预览</strong>
+                  <p>请选择对象后生成计划。</p>
+                </div>
+              </article>
+
+              <article class="panel plan-board">
+                <div class="panel-header">
+                  <div>
+                    <span class="card-label">Execution Board</span>
+                    <h3>计划执行看板</h3>
+                  </div>
+                  <span class="status-pill warning">本月 12 人</span>
+                </div>
+                <div class="kanban">
+                  <div>
+                    <h4>待确认</h4>
+                    <p>运营部 王敏：指令模板训练</p>
+                    <p>销售部 赵磊：沟通复盘</p>
+                  </div>
+                  <div>
+                    <h4>执行中</h4>
+                    <p>客服部 陈珂：中期跟进训练</p>
+                    <p>运营部 李然：需求变更复盘</p>
+                  </div>
+                  <div>
+                    <h4>已改善</h4>
+                    <p>研发部 周航：合格率 +21%</p>
+                    <p>销售部 孙璐：负面命中归零</p>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-block" id="governance">
+            <div class="section-heading" data-animate>
+              <p class="eyebrow">RBAC & Data Governance</p>
+              <h2>合规、权限和证据链</h2>
+              <p>企业 HR 产品最关键的是边界：哪些数据能采，谁能看，能不能导出，算法结论如何被人工复核。</p>
+            </div>
+
+            <div class="governance-grid" data-animate>
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <span class="card-label">Role Access</span>
+                    <h3>角色权限表</h3>
+                  </div>
+                  <span class="status-pill good">RBAC</span>
+                </div>
+                <table class="risk-table compact">
+                  <thead>
+                    <tr>
+                      <th>角色</th>
+                      <th>可见范围</th>
+                      <th>操作权限</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>CEO / HRD</td>
+                      <td>全公司脱敏指标、部门排行、成本估算</td>
+                      <td>查看、导出、配置阈值</td>
+                    </tr>
+                    <tr>
+                      <td>HRBP</td>
+                      <td>负责部门管理者档案和事件详情</td>
+                      <td>复核、发起纠偏、标记例外</td>
+                    </tr>
+                    <tr>
+                      <td>中层管理者</td>
+                      <td>仅本人报告、本人预警和本人训练计划</td>
+                      <td>查看、确认、申诉</td>
+                    </tr>
+                    <tr>
+                      <td>员工</td>
+                      <td>无系统账号</td>
+                      <td>无</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </article>
+
+              <article class="panel">
+                <div class="panel-header">
+                  <div>
+                    <span class="card-label">Evidence Policy</span>
+                    <h3>证据与隐私规则</h3>
+                  </div>
+                  <span class="status-pill warning">必须开启</span>
+                </div>
+                <div class="policy-list">
+                  <p><strong>公开场景限定：</strong>只处理群聊、任务系统和公开纪要，单聊直接丢弃。</p>
+                  <p><strong>员工脱敏：</strong>姓名、工号、手机号、邮箱自动替换为“成员 N”。</p>
+                  <p><strong>原文截断：</strong>报表导出只保留 50 字以内证据片段，敏感词替换为 ***。</p>
+                  <p><strong>人工复核：</strong>算法命中只进入处置队列，不能直接形成处罚结论。</p>
+                </div>
+              </article>
+            </div>
+          </section>
+
+          <section class="section-block" id="settings">
+            <div class="section-heading" data-animate>
+              <p class="eyebrow">System Settings</p>
+              <h2>配置中心与接口落地</h2>
+              <p>把文档中的算法阈值、阶段开关和数据源对接做成企业可配置能力，便于不同公司试点。</p>
+            </div>
+
+            <div class="settings-grid" data-animate>
+              <article class="settings-panel">
+                <span class="card-label">Thresholds</span>
+                <h3>风险阈值</h3>
+                <label>
+                  模糊指令率预警阈值
+                  <input id="vagueRange" type="range" min="20" max="80" value="45" />
+                  <strong><span id="vagueValue">45</span>%</strong>
+                </label>
+                <label>
+                  压迫指数高风险阈值
+                  <input id="pressureRange" type="range" min="30" max="90" value="60" />
+                  <strong><span id="pressureValue">60</span></strong>
+                </label>
+                <label>
+                  单任务需求变更阈值
+                  <input id="changeRange" type="range" min="1" max="6" value="3" />
+                  <strong><span id="changeValue">3</span> 次</strong>
+                </label>
+              </article>
+
+              <article class="settings-panel">
+                <span class="card-label">Deployment Stage</span>
+                <h3>阶段开关</h3>
+                <div class="switch-row">
+                  <span>启用实时预警</span>
+                  <button class="switch is-on" type="button" aria-pressed="true"></button>
+                </div>
+                <div class="switch-row">
+                  <span>进入绩效评分</span>
+                  <button class="switch" type="button" aria-pressed="false"></button>
+                </div>
+                <div class="switch-row">
+                  <span>开放老板 BI 大屏</span>
+                  <button class="switch is-on" type="button" aria-pressed="true"></button>
+                </div>
+                <div class="switch-row">
+                  <span>公开管理者排名</span>
+                  <button class="switch" type="button" aria-pressed="false"></button>
+                </div>
+              </article>
+
+              <article class="settings-panel integration-panel">
+                <span class="card-label">Integrations</span>
+                <h3>数据源接入状态</h3>
+                <div class="integration-row">
+                  <span>企业微信会话存档 API</span>
+                  <b>已接入</b>
+                </div>
+                <div class="integration-row">
+                  <span>OA 任务系统只读副本</span>
+                  <b>已接入</b>
+                </div>
+                <div class="integration-row pending">
+                  <span>飞书会议纪要 API</span>
+                  <b>待授权</b>
+                </div>
+                <div class="integration-row">
+                  <span>HR 离职数据导入</span>
+                  <b>已接入</b>
+                </div>
+              </article>
+            </div>
+
+            <article class="api-panel" data-animate>
+              <span class="card-label">API Contract</span>
+              <h3>开发接口清单</h3>
+              <div class="api-grid">
+                <code>POST /api/v1/messages/ingest</code>
+                <code>POST /api/v1/eval/instruction</code>
+                <code>POST /api/v1/analysis/communication</code>
+                <code>POST /api/v1/tasks/trace</code>
+                <code>GET /api/v1/events/review-queue</code>
+                <code>GET /api/v1/managers/{id}/profile</code>
+                <code>POST /api/v1/correction/plans</code>
+                <code>PUT /api/v1/config/thresholds</code>
+              </div>
+            </article>
+          </section>
+        </main>
+      </div>
+    </div>
+
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="./script.js"></script>
+  </body>
+</html>
